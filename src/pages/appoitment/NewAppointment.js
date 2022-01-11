@@ -75,53 +75,8 @@ class NewAppointment extends Component {
         });
     }
 
-    validateQuestion = (questionText) => {
-        if(questionText.length === 0) {
-            return {
-                validateStatus: 'error',
-                errorMsg: 'Please enter your question!'
-            }
-        } else if (questionText.length > POLL_QUESTION_MAX_LENGTH) {
-            return {
-                validateStatus: 'error',
-                errorMsg: `Question is too long (Maximum ${POLL_QUESTION_MAX_LENGTH} characters allowed)`
-            }
-        } else {
-            return {
-                validateStatus: 'success',
-                errorMsg: null
-            }
-        }
-    }
 
-    handleQuestionChange(event) {
-        const value = event.target.value;
-        this.setState({
-            question: {
-                text: value,
-                ...this.validateQuestion(value)
-            }
-        });
-    }
 
-    validateChoice = (choiceText) => {
-        if(choiceText.length === 0) {
-            return {
-                validateStatus: 'error',
-                errorMsg: 'Please enter a choice!'
-            }
-        } else if (choiceText.length > POLL_CHOICE_MAX_LENGTH) {
-            return {
-                validateStatus: 'error',
-                errorMsg: `Choice is too long (Maximum ${POLL_CHOICE_MAX_LENGTH} characters allowed)`
-            }
-        } else {
-            return {
-                validateStatus: 'success',
-                errorMsg: null
-            }
-        }
-    }
 
     handleChoiceChange(event, index) {
         const choices = this.state.choices.slice();

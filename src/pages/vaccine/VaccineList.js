@@ -70,6 +70,7 @@ class VaccineList extends Component {
         return diseaseViews;
     }
 
+    //TODO:display lowest price
     render() {
         return (
             <List
