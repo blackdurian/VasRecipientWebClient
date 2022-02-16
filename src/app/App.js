@@ -9,7 +9,7 @@ import {
 import { getCurrentUser } from '../util/APIUtils';
 import { ACCESS_TOKEN } from '../constants';
 
-import NewPoll from '../pages/poll/NewPoll';
+
 import Login from '../pages/user/login/Login';
 import Signup from '../pages/user/signup/Signup';
 import Profile from '../pages/user/profile/Profile';
@@ -22,8 +22,10 @@ import { Layout, notification } from 'antd';
 
 import VaccineList from "../pages/vaccine/VaccineList";
 import ClinicList from "../pages/clinic/ClinicList";
+import {AuthContext} from '../context/AuthContext';
 
 const { Content } = Layout;
+
 
 //TODO: #important! upgrade to react 17.0.2 /react 18
 //TODO: refactor to react router v6
@@ -33,65 +35,81 @@ const { Content } = Layout;
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      currentUser: null,
-      isAuthenticated: false,
-      isLoading: true
-    }
-    this.handleLogout = this.handleLogout.bind(this);
-    this.loadCurrentUser = this.loadCurrentUser.bind(this);
-    this.handleLogin = this.handleLogin.bind(this);
 
     notification.config({
       placement: 'topRight',
       top: 70,
       duration: 3,
     });
+
+    //TODO: fetch refresh token along with username, move loadCurrentUser to reducer action
+    this.loadCurrentUser = ()=>{
+      getCurrentUser()
+          .then(response => {
+            this.setState({
+              auth:{
+                authState: true,
+                currentUser:response,
+              },
+              isLoading: false
+            });
+          }).catch(error => {
+        this.setState({
+          isLoading: false
+        });
+      });
+    };
+
+
+    this.handleLogout = (redirectTo="/", notificationType="success", description="You're successfully logged out.") =>{
+      localStorage.removeItem(ACCESS_TOKEN);
+
+      this.setState({
+        auth:{
+          authState: false,
+          currentUser:null,
+        }
+      });
+
+      this.props.history.push(redirectTo);
+
+      notification[notificationType]({
+        message: 'VAS',
+        description: description,
+      });
+    };
+
+    //TODO: useAuthState
+    this.handleLogin = (redirectTo) =>{
+      notification.success({
+        message: 'VAS',
+        description: "You're successfully logged in.",
+      });
+      this.loadCurrentUser();
+      this.props.history.push(redirectTo);
+    }
+    this.redirectToLogin = (redirectTo="/login") => {
+      this.props.history.push(redirectTo);
+    }
+
+    this.state = {
+      auth:{
+        authState: false,
+        currentUser:null,
+        handleLogout:this.handleLogout,
+        loadCurrentUser:this.loadCurrentUser,
+        redirectToLogin:this.redirectToLogin,
+      },
+      currentUser: null,
+      isAuthenticated: false,
+      isLoading: true
+    }
+
   }
 
-//TODO: fetch refresh token along with username, move loadCurrentUser to reducer action
-  loadCurrentUser() {
-    getCurrentUser()
-    .then(response => {
-      this.setState({
-        currentUser: response,
-        isAuthenticated: true,
-        isLoading: false
-      });
-    }).catch(error => {
-      this.setState({
-        isLoading: false
-      });
-    });
-  }
 
   componentDidMount() {
     this.loadCurrentUser();
-  }
-//TODO: useDispatch
-  handleLogout(redirectTo="/", notificationType="success", description="You're successfully logged out.") {
-    localStorage.removeItem(ACCESS_TOKEN);
-
-    this.setState({
-      currentUser: null,
-      isAuthenticated: false
-    });
-
-    this.props.history.push(redirectTo);
-
-    notification[notificationType]({
-      message: 'VAS',
-      description: description,
-    });
-  }
-//TODO: useAuthState
-  handleLogin() {
-    notification.success({
-      message: 'VAS',
-      description: "You're successfully logged in.",
-    });
-    this.loadCurrentUser();
-    this.props.history.push("/");
   }
 
   render() {
@@ -101,36 +119,28 @@ class App extends Component {
 
     return (
         <Layout className="app-container">
-          <AppHeader isAuthenticated={this.state.isAuthenticated}
-            currentUser={this.state.currentUser}
+          <AppHeader isAuthenticated={this.state.auth.authState}
+            currentUser={this.state.auth.currentUser}
             onLogout={this.handleLogout} />
 
           <Content className="app-content">
             <div className="container">
               <Switch>
-{/*                <Route exact path="/"
-                       render={(props) => <PollList isAuthenticated={this.state.isAuthenticated}
-                                                    currentUser={this.state.currentUser} {...props} />}
-                />*/}
-                <Route exact path="/" component={VaccineList}/>
-                <Route path="/login"  render={(props) => <Login onLogin={this.handleLogin} {...props} />}/>
-                <Route path="/signup" component={Signup}/>
-                <Route exact path="/clinic/vaccines/:vaccine"
-                       render={(props) => <ClinicList isAuthenticated={this.state.isAuthenticated}
-                                                    handleLogout={this.handleLogout} {...props} />}
-                />
-                <Route path="/users/:username"
-                  render={(props) => <Profile isAuthenticated={this.state.isAuthenticated} currentUser={this.state.currentUser} {...props}  />}
-                />
-                <PrivateRoute authenticated={this.state.isAuthenticated} path="/poll/new" component={NewPoll} handleLogout={this.handleLogout}/>
-                <PrivateRoute
-                    authenticated={this.state.isAuthenticated}
-                    path="/appointment/new"
-                    component={NewPoll}
-                    handleLogout={this.handleLogout}
-                    currentUser={this.state.currentUser}
-                />
-                <Route component={NotFound}/>
+
+                <AuthContext.Provider value={this.state.auth}>
+                  <Route exact path="/" component={VaccineList}/>
+                  <Route path="/login"  render={(props) => <Login onLogin={this.handleLogin} {...props} />}/>
+                  <Route path="/signup" component={Signup}/>
+                  <Route exact path="/clinic/vaccines/:vaccine"
+                         render={(props) => <ClinicList auth={this.state.auth}
+                                                       {...props} />}
+                  />
+                  <Route path="/users/:username"
+                         render={(props) => <Profile isAuthenticated={this.state.auth.authState} currentUser={this.state.auth.currentUser} {...props}  />}
+                  />
+
+                </AuthContext.Provider>
+                  <Route component={NotFound}/>
               </Switch>
             </div>
           </Content>

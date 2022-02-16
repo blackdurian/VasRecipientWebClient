@@ -7381,15 +7381,15 @@
     "lodash.debounce" "^4.0.8"
     "resize-observer-polyfill" "^1.5.0"
 
-"react@*", "react@^0.14.0 || ^15.0.0 || ^16.0.0", "react@^0.14.0 || ^15.0.0-rc || ^16.0.0-rc || ^16.0.0", "react@^0.14.0 || ^15.0.1 || ^16.0.0", "react@^16.0.0", "react@^16.5.2", "react@>=15.0.0", "react@>=15.x", "react@>=16.0.0", "react@>=16.9.0", "react@16.x":
-  "integrity" "sha512-FDCSVd3DjVTmbEAjUNX6FgfAmQ+ypJfHUsqUJOYNCBUp1h8lqmtC+0mXJ+JjsWx4KAVTkk1vKd1hLQPvEviSuw=="
-  "resolved" "https://registry.npmjs.org/react/-/react-16.5.2.tgz"
-  "version" "16.5.2"
+"react@*", "react@^0.14.0 || ^15.0.0 || ^16.0.0", "react@^0.14.0 || ^15.0.0-rc || ^16.0.0-rc || ^16.0.0", "react@^0.14.0 || ^15.0.1 || ^16.0.0", "react@^16.0.0", "react@^16.6.0", "react@>=15.0.0", "react@>=15.x", "react@>=16.0.0", "react@>=16.9.0", "react@16.x":
+  "integrity" "sha512-zJPnx/jKtuOEXCbQ9BKaxDMxR0001/hzxXwYxG8septeyYGfsgAei6NgfbVgOhbY1WOP2o3VPs/E9HaN+9hV3Q=="
+  "resolved" "https://registry.npmjs.org/react/-/react-16.6.0.tgz"
+  "version" "16.6.0"
   dependencies:
     "loose-envify" "^1.1.0"
     "object-assign" "^4.1.1"
     "prop-types" "^15.6.2"
-    "schedule" "^0.5.0"
+    "scheduler" "^0.10.0"
 
 "read-pkg-up@^1.0.1":
   "integrity" "sha1-nWPBMnbAZZGNV/ACpX9AobZD+wI="
@@ -7823,6 +7823,14 @@
   "resolved" "https://registry.npmjs.org/schedule/-/schedule-0.5.0.tgz"
   "version" "0.5.0"
   dependencies:
+    "object-assign" "^4.1.1"
+
+"scheduler@^0.10.0":
+  "integrity" "sha512-+TSTVTCBAA3h8Anei3haDc1IRwMeDmtI/y/o3iBe3Mjl2vwYF9DtPDt929HyRmV/e7au7CLu8sc4C4W0VOs29w=="
+  "resolved" "https://registry.npmjs.org/scheduler/-/scheduler-0.10.0.tgz"
+  "version" "0.10.0"
+  dependencies:
+    "loose-envify" "^1.1.0"
     "object-assign" "^4.1.1"
 
 "schema-utils@^0.3.0":

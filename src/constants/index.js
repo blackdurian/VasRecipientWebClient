@@ -3,6 +3,10 @@ export const ACCESS_TOKEN = 'accessToken';
 export const BOD_DATE_FORMAT = 'YYYY-MM-DD';
 export const VACCINE_LIST_SIZE = 30;
 export const CLINIC_LIST_SIZE = 30;
+export const APPOINTMENT_LIST_SIZE =30;
+
+export const UI_TIMEZONE ="+8"
+export const SERVER_TIMEZONE ="UTC"
 
 export const POLL_LIST_SIZE = 30;
 export const MAX_CHOICES = 6;
