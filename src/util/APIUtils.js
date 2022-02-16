@@ -1,10 +1,11 @@
-import { API_BASE_URL, POLL_LIST_SIZE, ACCESS_TOKEN } from '../constants';
-
+import { API_BASE_URL, ACCESS_TOKEN } from '../constants';
+//TODO: context provider/ reducer hook
+//TODO: refactor to axios
 const request = (options) => {
     const headers = new Headers({
         'Content-Type': 'application/json',
     })
-
+    
     if(localStorage.getItem(ACCESS_TOKEN)) {
         headers.append('Authorization', 'Bearer ' + localStorage.getItem(ACCESS_TOKEN))
     }
@@ -13,45 +14,73 @@ const request = (options) => {
     options = Object.assign({}, defaults, options);
 
     return fetch(options.url, options)
-        .then(response =>
-            response.json().then(json => {
-                if(!response.ok) {
-                    return Promise.reject(json);
-                }
-                return json;
-            })
-        );
+    .then(response => 
+        response.json().then(json => {
+            if(!response.ok) {
+                return Promise.reject(json);
+            }
+            return json;
+        })
+    );
 };
 
-export function getAllPolls(page, size) {
-    page = page || 0;
-    size = size || POLL_LIST_SIZE;
-
+export function getVaccineById(id) {
     return request({
-        url: API_BASE_URL + "/polls?page=" + page + "&size=" + size,
+        url: API_BASE_URL + "/vaccines/"+id ,
         method: 'GET'
     });
 }
 
-export function createPoll(pollData) {
+export function getAllVaccines() {
     return request({
-        url: API_BASE_URL + "/polls",
-        method: 'POST',
-        body: JSON.stringify(pollData)
+        url: API_BASE_URL + "/vaccines" ,
+        method: 'GET'
     });
 }
 
-export function castVote(voteData) {
+export function getAllClinicsByVaccineId(vaccineId) {
     return request({
-        url: API_BASE_URL + "/polls/" + voteData.pollId + "/votes",
-        method: 'POST',
-        body: JSON.stringify(voteData)
+        url: API_BASE_URL + "/clinic/vaccines?id="+vaccineId ,
+        method: 'GET'
     });
 }
+
+export function createAppointment(AppointmentData) {
+    return request({
+        url: API_BASE_URL + "/appointments",
+        method: 'POST',
+        body: JSON.stringify(AppointmentData)
+    });
+}
+
+export function getAllAppointmentsByRecipient(recipient){
+    return request({
+        url: API_BASE_URL + "/appointments/recipient?" + recipient,
+        method: 'GET'
+    });
+}
+
+export function getAppointmentById(id){
+    return request({
+        url: API_BASE_URL + "/appointments/id?" + id,
+        method: 'GET'
+    });
+}
+
+
+export function createShiftOptions(clinicId) {
+    return request({
+        url: API_BASE_URL + "/shift/available/options?clinic="+clinicId ,
+        method: 'GET'
+    });
+}
+
+
 
 export function login(loginRequest) {
+    //TODO: decode password
     return request({
-        url: API_BASE_URL + "/auth/signin",
+        url: API_BASE_URL + "/auth/login",
         method: 'POST',
         body: JSON.stringify(loginRequest)
     });
@@ -64,14 +93,14 @@ export function signup(signupRequest) {
         body: JSON.stringify(signupRequest)
     });
 }
-
+//TODO
 export function checkUsernameAvailability(username) {
     return request({
         url: API_BASE_URL + "/user/checkUsernameAvailability?username=" + username,
         method: 'GET'
     });
 }
-
+//TODO
 export function checkEmailAvailability(email) {
     return request({
         url: API_BASE_URL + "/user/checkEmailAvailability?email=" + email,
@@ -98,22 +127,4 @@ export function getUserProfile(username) {
     });
 }
 
-export function getUserCreatedPolls(username, page, size) {
-    page = page || 0;
-    size = size || POLL_LIST_SIZE;
 
-    return request({
-        url: API_BASE_URL + "/users/" + username + "/polls?page=" + page + "&size=" + size,
-        method: 'GET'
-    });
-}
-
-export function getUserVotedPolls(username, page, size) {
-    page = page || 0;
-    size = size || POLL_LIST_SIZE;
-
-    return request({
-        url: API_BASE_URL + "/users/" + username + "/votes?page=" + page + "&size=" + size,
-        method: 'GET'
-    });
-}
