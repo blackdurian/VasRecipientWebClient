@@ -4,7 +4,7 @@ import {getAllClinicsByVaccineId, getVaccineById} from '../../util/APIUtils';
 import {Avatar, Card, Descriptions, Divider, Icon, Input, List, notification} from 'antd';
 import {CLINIC_LIST_SIZE} from '../../constants';
 import {Link, withRouter} from 'react-router-dom';
-import {VaccineDetail} from "../vaccine/VaccineDetail";
+import {VaccineInfo} from "../vaccine/components/VaccineInfo";
 import NewAppointment  from "../appoitment/NewAppointment";
 
 
@@ -146,7 +146,7 @@ class ClinicList extends Component {
         return (
             <React.Fragment>
                 <div style={{marginTop:35}} >
-                    <VaccineDetail  vaccine={this.state.vaccine}/>
+                    <VaccineInfo vaccine={this.state.vaccine}/>
                 </div>
             <Divider />
                 {clinicView}

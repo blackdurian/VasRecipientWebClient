@@ -23,6 +23,7 @@ import { Layout, notification } from 'antd';
 import VaccineList from "../pages/vaccine/VaccineList";
 import ClinicList from "../pages/clinic/ClinicList";
 import {AuthContext} from '../context/AuthContext';
+import AppointmentList from "../pages/appoitment/AppointmentList";
 
 const { Content } = Layout;
 
@@ -134,6 +135,12 @@ class App extends Component {
                   <Route exact path="/clinic/vaccines/:vaccine"
                          render={(props) => <ClinicList auth={this.state.auth}
                                                        {...props} />}
+                  />
+                  <PrivateRoute
+                    path="/appointments"
+                    component={AppointmentList}
+                    authenticated={this.state.auth.authState}
+                    auth={this.state.auth}
                   />
                   <Route path="/users/:username"
                          render={(props) => <Profile isAuthenticated={this.state.auth.authState} currentUser={this.state.auth.currentUser} {...props}  />}

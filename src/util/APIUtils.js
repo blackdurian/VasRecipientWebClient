@@ -53,16 +53,16 @@ export function createAppointment(AppointmentData) {
     });
 }
 
-export function getAllAppointmentsByRecipient(recipient){
+export function getCurrentRecipientAppointments(){
     return request({
-        url: API_BASE_URL + "/appointments/recipient?" + recipient,
+        url: API_BASE_URL + "/appointments/recipient",
         method: 'GET'
     });
 }
 
 export function getAppointmentById(id){
     return request({
-        url: API_BASE_URL + "/appointments/id?" + id,
+        url: API_BASE_URL + "/appointments/" + id,
         method: 'GET'
     });
 }
@@ -122,7 +122,7 @@ export function getCurrentUser() {
 
 export function getUserProfile(username) {
     return request({
-        url: API_BASE_URL + "/users/" + username,
+        url: API_BASE_URL + "/profile/" + username,
         method: 'GET'
     });
 }

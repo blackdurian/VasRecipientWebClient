@@ -1,10 +1,10 @@
 import {Descriptions, notification, Tag} from "antd";
-import React, {Component} from "react";
+import React from "react";
 
-import {getVaccineById} from "../../util/APIUtils";
+import {getVaccineById} from "../../../util/APIUtils";
 
 //TODO: fix issue rerender multiple times
-export const VaccineDetail =({vaccine})=> {
+export const VaccineInfo =({vaccine})=> {
         console.log(vaccine)
         let diseaseViews = [];
          vaccine.diseases.forEach((disease, diseaseIndex) => {

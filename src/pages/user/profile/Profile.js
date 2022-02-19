@@ -87,11 +87,13 @@ class Profile extends Component {
                                 </div>
                                 <div className="user-summary">
                                     <div className="full-name">{this.state.user.name}</div>
-                                    <div className="username">@{this.state.user.username}</div>
                                     <div className="user-joined">
-                                        Joined {formatDate(this.state.user.joinedAt)}
+                                       {this.state.user.email}
                                     </div>
                                 </div>
+                            </div>
+                            <div>
+                                Birthday: {formatDate(this.state.user.bod)}
                             </div>
                         </div>  
                     ): null               

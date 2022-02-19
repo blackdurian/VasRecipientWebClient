@@ -4,7 +4,9 @@ import {createAppointment, createShiftOptions} from '../../util/APIUtils';
 import {Form, Input, Button, Select, Modal, notification} from 'antd';
 
 
-import {VaccineDetail} from "../vaccine/VaccineDetail";
+import {VaccineInfo} from "../vaccine/components/VaccineInfo";
+import {ClinicInfo} from "../clinic/components/ClinicInfo";
+import {Route} from "react-router-dom";
 
 
 const Option = Select.Option;
@@ -46,7 +48,7 @@ class NewAppointmentForm extends React.Component {
             })
         }
     }
-//todo: fixt <VaccineDetail> rerender
+//todo: fixt <VaccineInfo> rerender
     render() {
         const {recipient, clinic, vaccine, doseNumber, visible, onCancel, onCreate, form} = this.props;
         const {shiftTimes} = this.state;
@@ -59,24 +61,14 @@ class NewAppointmentForm extends React.Component {
                 onCancel={onCancel}
                 onOk={onCreate}
             >
-                <div>
-                    <h3> Clinic </h3>
-                    <p> Name : {clinic.name}</p>
-                    <p> Address : {clinic.suite}, {clinic.street}, {clinic.city} {clinic.zipcode}</p>
-                </div>
-
-                <VaccineDetail vaccine={vaccine}/>
-
-
+                <ClinicInfo clinic={clinic}/>
+                <VaccineInfo vaccine={vaccine}/>
                 <div>
                     <p><strong> Dose Number </strong> : {doseNumber}</p>
                 </div>
+
                 <Form layout="vertical">
-                    <Form.Item label={"Remark"}>
-                        {getFieldDecorator('remark', {
-                            initialValue:""
-                        })(<Input/>)}
-                    </Form.Item>
+
 
                     <Form.Item label="Timeslot">
                         <Select
@@ -101,6 +93,11 @@ class NewAppointmentForm extends React.Component {
                                 ))}
                             </Select>
                         )}
+                    </Form.Item>
+                    <Form.Item >
+                        {getFieldDecorator('remark', {
+                            initialValue:""
+                        })(<Input type="hidden"/>)}
                     </Form.Item>
                     <Form.Item  >
                         {getFieldDecorator('recipient', {
@@ -137,14 +134,12 @@ class NewAppointment extends Component {
             disabled:true,
             visible: false,
             isLoading: false,
-            remark:"",
             recipient:"",
         };
 
         this.handleCancel = () => {
             this.setState({
                 visible: false,
-                remark:"",
             });
 
         };
@@ -185,7 +180,8 @@ class NewAppointment extends Component {
 
             })
     }
-    handleCreate = () => {
+
+    handleCreate = ( ) => {
 
         //TODO: useRef()
         const { form } = this.formRef.props;
@@ -197,10 +193,11 @@ class NewAppointment extends Component {
             }
             this.setState({loading: true})
                  createAppointment(values)
-                     .then(
-                         response => {
-                             //todo:redirect to list
+                     .then(response => {
+                             //todo:redirect to Appointment list, useHistory(); react 17
+                         document.location.href="/appointments";
                               console.log(response)
+
                          }
                      ).catch(error => {
                      if(error.status === 401) {
@@ -255,14 +252,14 @@ class NewAppointment extends Component {
     render() {
         const {  clinic, vaccine, doseNumber } = this.props;
         const { recipient } = this.state;
-
         const NewAppointmentFormWrapper =  Form.create({ name: 'NewAppointmentForm' })(NewAppointmentForm);
         return (
-
+            <Route render={({ history}) => (
             <div>
                 <Button loading={this.state.loading} disabled={this.state.disabled} onClick={this.showModal}>
                     {this.state.text}
                 </Button>
+
                 <NewAppointmentFormWrapper
                     wrappedComponentRef={this.saveFormRef}
                     recipient={recipient}
@@ -274,6 +271,7 @@ class NewAppointment extends Component {
                     onCreate={this.handleCreate}
                 />
             </div>
+            )} />
         );
     }
 }
