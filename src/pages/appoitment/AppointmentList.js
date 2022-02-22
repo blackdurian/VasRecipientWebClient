@@ -13,6 +13,8 @@ import {VaccineInfo} from "../vaccine/components/VaccineInfo";
 import {AppointmentProgress} from "./AppointmentProgress";
 import ColumnGroup from "antd/es/table/ColumnGroup";
 import Column from "antd/es/table/Column";
+import moment from "moment";
+import {render} from "react-dom";
 
 
 class AppointmentList extends Component {
@@ -83,12 +85,15 @@ class AppointmentList extends Component {
                            }}
                           rowKey={((record, index) => (record.id))}
                     >
-                            <Column title="Time" dataIndex="shift.start" key="shift.id"  />
+                            <Column title="Time" dataIndex="shift.start" key="shift.id" render={(text, record, index)=>{
+                               let start = moment(record.shift.start).format('YYYY/MM/DD HH:mm');
+                                let end = moment(record.shift.end).format('HH:mm');
+                              return (<div>{start} - {end}</div>)
+                            }} />
                         <ColumnGroup title="Clinic ">
                             <Column title="name" dataIndex="clinic.name" key={shortid.generate()} />
                             <Column title="suite" dataIndex="clinic.suite" key={shortid.generate()} />
                             <Column title="street" dataIndex="clinic.street" key={shortid.generate()} />
-                            <Column title="city" dataIndex="clinic.city" key={shortid.generate()} />
                         </ColumnGroup>
                         <ColumnGroup title="Vaccine ">
                             <Column title="Vaccine Name" dataIndex="vaccine.name" key={shortid.generate()} />

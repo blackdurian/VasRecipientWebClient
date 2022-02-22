@@ -1,6 +1,7 @@
 import {Steps} from "antd";
 import React, {Component} from "react";
 import NewAppointment from "./NewAppointment";
+import moment from "moment";
 
 const { Step } = Steps;
 
@@ -74,7 +75,7 @@ export const AppointmentProgress =(props)=> {
 <div>
     <Steps progressDot current={ getStatusStepIndex(  status)} >
         <Step title="Pending" />
-        <Step title="Scheduled" description={ `${shift.start} - ${shift.end}` } />
+        <Step title="Scheduled" description={ `${ moment(shift.start).format('YYYY/MM/DD HH:mm')} - ${moment(shift.end).format('YYYY/MM/DD HH:mm')}` } />
         {finalSteps}
     </Steps>
     {newAppModal}
@@ -84,10 +85,6 @@ export const AppointmentProgress =(props)=> {
     );
 
 }
-
-
-
-
 
 
 
